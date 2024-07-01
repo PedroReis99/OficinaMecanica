@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OficinaMecanica.Context;
 using OficinaMecanica.Models;
 
@@ -16,8 +17,8 @@ namespace OficinaMecanica.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Oficina>> Get() 
+        [HttpGet("ListarOficinas")]
+        public ActionResult<IEnumerable<Oficina>> GetOficinas() 
         {
             try
             {
@@ -27,6 +28,30 @@ namespace OficinaMecanica.Controllers
                     return Ok(oficina);
 
                 return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "" +
+                    "Ocorreu um erro ao processar sua solicitação...");
+            }
+        }
+
+        [HttpGet("{id:int}", Name = "Oficina")]
+        public ActionResult GetOficina(int id)
+        {
+            try
+            {
+                if (id > 0)
+                {
+                    var oficina = _context?.Oficinas.Where(w => w.IdOficina == id).AsNoTracking().FirstOrDefault();
+
+                    if (oficina is not null)
+                        return Ok(oficina);
+
+                    return BadRequest("Não foram encontradas oficinas.");
+                }
+
+                throw new Exception();
             }
             catch (Exception ex)
             {

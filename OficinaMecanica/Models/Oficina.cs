@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace OficinaMecanica.Models
 {
@@ -26,6 +27,7 @@ namespace OficinaMecanica.Models
         [Column("DATA_ENTRADA")]
         public DateTime DataEntrada { get; set; }
 
+        [JsonIgnore]
         public ICollection<Funcionario>? Funcionarios { get; set; }
     }
 }
